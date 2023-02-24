@@ -6,6 +6,7 @@ import re
 
 
 ERROR_TAG = '[НЕ РАСПОЗНАНО]'
+pytesseract.pytesseract.tesseract_cmd = 'YOUR TESSERACT PATH HERE'
 
 
 def ocr_core(filename: Union[Image.Image, str]):
@@ -55,7 +56,7 @@ def ocr_core(filename: Union[Image.Image, str]):
 
 
 # If you don't have tesseract executable in your PATH, include the following:
-pytesseract.pytesseract.tesseract_cmd = r'C:\Users\spovt\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
+
 # Example tesseract_cmd = r'C:\Program Files (x86)\Tesseract-OCR\tesseract'
 import math
 from PIL import Image, ImageDraw

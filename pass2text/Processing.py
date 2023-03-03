@@ -6,54 +6,39 @@ import re
 from PIL import Image, ImageDraw
 
 
+# pytesseract.pytesseract.tesseract_cmd = r'C:\Users\spovt\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
+
+IMAGE_NAME = "temp2.png"
 ERROR_TAG = '[НЕ РАСПОЗНАНО]'
 pytesseract.pytesseract.tesseract_cmd = r'C:\Users\spovt\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
 
 
-def ocr_core(filename: Union[Image.Image, str]):
-        image = Image.open(filename) if isinstance(filename, str) else filename
-        draw = ImageDraw.Draw(image)  # Создаем инструмент для рисования.
-        width = image.size[0]  # Определяем ширину.
-        height = image.size[1]  # Определяем высоту.
-        pix = image.load()
-        for i in range(width):
-            for j in range(height):
-                a = pix[i, j][0]
-                b = pix[i, j][1]
-                c = pix[i, j][2]
-                if a > 220:
-                    a, b, c = 255, 255, 255
-                draw.point((i, j), (a, b, c))
-        for i in range(width):
-            for j in range(height):
-                a = pix[i, j][0]
-                b = pix[i, j][1]
-                c = pix[i, j][2]
-                S = a + b + c
-                if (S > (((255 + 80) // 3) * 3)):  # 80 3 3
-                    a, b, c = 255, 255, 255
-                else:
-                    a, b, c = 0, 0, 0
-                draw.point((i, j), (a, b, c))
-        # for i in range(width):
-        #     for j in range(height):
-        #         a = pix[i, j][0] + 10
-        #         b = pix[i, j][1] + 10
-        #         c = pix[i, j][2] + 10
-        #         if (a < 0):
-        #             a = 0
-        #         if (b < 0):
-        #             b = 0
-        #         if (c < 0):
-        #             c = 0
-        #         if (a > 255):
-        #             a = 255
-        #         if (b > 255):
-        #             b = 255
-        #         if (c > 255):
-        #             c = 255
-        #         draw.point((i, j), (a, b, c))
-        enh = ImageEnhance.Brightness(image)
+def _ocr_core(filename: Union[Image.Image, str]):
+    image = Image.open(filename) if isinstance(filename, str) else filename
+    draw = ImageDraw.Draw(image)  # Создаем инструмент для рисования.
+    width = image.size[0]  # Определяем ширину.
+    height = image.size[1]  # Определяем высоту.
+    pix = image.load()
+    for i in range(width):
+        for j in range(height):
+            a = pix[i, j][0]
+            b = pix[i, j][1]
+            c = pix[i, j][2]
+            if a > 220:
+                a, b, c = 255, 255, 255
+            draw.point((i, j), (a, b, c))
+    for i in range(width):
+        for j in range(height):
+            a = pix[i, j][0]
+            b = pix[i, j][1]
+            c = pix[i, j][2]
+            S = a + b + c
+            if (S > (((255 + 80) // 3) * 3)):  # 80 3 3
+                a, b, c = 255, 255, 255
+            else:
+                a, b, c = 0, 0, 0
+            draw.point((i, j), (a, b, c))
+    enh = ImageEnhance.Brightness(image)
 
 
 # If you don't have tesseract executable in your PATH, include the following:
@@ -69,10 +54,10 @@ def passport_image2dict(image: Union[Image.Image, str], show_images: bool = Fals
     w, h = image.width, image.height
     # верхняя часть
     image1 = image.crop((0, h*0.09, w*0.895, h*0.255))
-    ocr_core(image1)
+    _ocr_core(image1)
     # нижняя часть
     image2 = image.crop((w*0.4, h*0.55, w*0.895,h*0.85))
-    ocr_core(image2)
+    _ocr_core(image2)
     # серия номер
     image3 = image.crop((w*0.895, h*0.12, w*0.95, h*0.5))
     image3 = image3.rotate(90, expand=True)
@@ -156,11 +141,4 @@ def passport_image2dict(image: Union[Image.Image, str], show_images: bool = Fals
         'Серия': series,
         'Номер': number
     }
-
-
-photos = '\\test_photos\\'
-directory = os.getcwd() + photos
-
-for filename in os.listdir(directory):
-    passport_image2dict(directory + filename)
 

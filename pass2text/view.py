@@ -6,6 +6,19 @@ from Processing import passport_image2dict
 from db import DB
 import sys
 import sqlite3
+from PyQt5.QtCore import Qt
+
+D = {"Код подразделения" : "code" ,
+    "Место рождения" : "birth_place" , 
+    "Отчество" : 'patronymic', 
+    "Серия" : 'series', 
+    "Номер" : 'number', 
+    "Дата выдачи" : 'issue_date', 
+    "Дата рождения" : 'birth_date', 
+    "Имя" : 'name', 
+    "Фамилия" : 'surname', 
+    "Пол" : 'gender', 
+    "Кем выдан" : 'issue_place'}
 
 
 class MainWindow(QMainWindow, MW.Ui_MainWindow):  # Объявление класса Калькулятор, который наследуется от QMainWindow, в котором прописан весь основной интерфейс программы (интерфейс создан в программе QtDesigner)
@@ -19,6 +32,37 @@ class MainWindow(QMainWindow, MW.Ui_MainWindow):  # Объявление кла�
     
     def add_functions(self):
         self.button_add.clicked.connect(lambda: self.add_to_db())
+    
+    def on_enter_click(self):
+        self.cur.execute('SELECT * FROM person')
+        table = self.cur.fetchall()
+
+        # update table
+        for el_index, el in enumerate(table):
+            for item_index, item in enumerate(el):
+                if str(item) != str(self.table_info.item(el_index, item_index).text()):
+
+                    s = "update person set {column} = '{val}' where series = '{series_val}' and code = '{code_val}' ".\
+                        format( 
+                        column = D[self.table_info.horizontalHeaderItem(item_index).text()], 
+                        val = self.table_info.item(el_index, item_index).text(),  
+                        series_val = el[0], 
+                        code_val = el[1])
+                    
+                    with open("command.txt", "w") as f:
+                        f.write(s)
+
+                    try:
+                        self.cur.execute(s)
+                        self.conn.commit()
+                    except:
+                        pass
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Return:
+            self.on_enter_click()
+        if event.key() == Qt.Key_Shift:
+            self.change_table_view()
     
     def add_to_db(self):
         values = ", ".join(

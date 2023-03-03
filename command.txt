@@ -1,0 +1,1 @@
+update person set birth_date = '6' where series = '3' and code = '3' 

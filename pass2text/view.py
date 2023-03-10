@@ -1,12 +1,20 @@
 import PyQt5
-import MW
+from GUI.MainWindow import Ui_MainWindow as Ui_MainWindow
+from GUI.ImageWindow import Ui_Dialog as Ui_ImageWindow
 from PyQt5 import QtWidgets  # Основной файл программы с прописанной логикой
-from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QTableWidgetItem # Импортирование необходимых виджетов из библиотеки PyQt5
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QTableWidgetItem, QDialog, QFileDialog  # Импортирование необходимых виджетов из библиотеки PyQt5
 from Processing import passport_image2dict
 from db import DB
 import sys
+from PIL import Image, ImageDraw, ImageEnhance
+from PyQt5.QtGui import QPixmap, QImage
 import sqlite3
 from PyQt5.QtCore import Qt
+
+
+IMG_X = 410
+IMG_Y = 520
+
 
 D = {"Код подразделения" : "code" ,
     "Место рождения" : "birth_place" , 
@@ -21,18 +29,17 @@ D = {"Код подразделения" : "code" ,
     "Кем выдан" : 'issue_place'}
 
 
-class MainWindow(QMainWindow, MW.Ui_MainWindow):  # Объявление класса Калькулятор, который наследуется от QMainWindow, в котором прописан весь основной интерфейс программы (интерфейс создан в программе QtDesigner)
+class MainWindow(QMainWindow, Ui_MainWindow):
+    
     def __init__(self, db: DB):
         super().__init__()  # Инициализация класса
         self.cur = db.cursor
         self.db = db.db
         self.setupUi(self)
-        self.add_functions()
-        self.change_table_view()
-    
-    def add_functions(self):
         self.button_add.clicked.connect(lambda: self.add_to_db())
-    
+        self.button_load.clicked.connect(lambda: self.load_image())
+        self.change_table_view()
+        
     def on_enter_click(self):
         self.cur.execute('SELECT * FROM person')
         table = self.cur.fetchall()
@@ -64,6 +71,10 @@ class MainWindow(QMainWindow, MW.Ui_MainWindow):  # Объявление кла�
         if event.key() == Qt.Key_Shift:
             self.change_table_view()
     
+    def load_image(self):
+        window = ImageWindow()
+        window.exec()
+
     def add_to_db(self):
         values = ", ".join(
             [self.code.text(),
@@ -115,3 +126,23 @@ class MainWindow(QMainWindow, MW.Ui_MainWindow):  # Объявление кла�
             self.table_info.setRowCount(rows + 1)
             for idy, inner_el in enumerate(eli):
                 self.table_info.setItem(rows, idy, QTableWidgetItem(str(inner_el)))
+
+class ImageWindow(QDialog, Ui_ImageWindow):
+
+    def __init__(self):
+        super().__init__()  # Инициализация класса
+        self.setupUi(self)
+
+        fname = QFileDialog.getOpenFileName(self, 'Загрузить изображение', 'C:\\', "Image files (*.jpg *.png)")
+        self.image_path = fname[0]
+        print(self.image_path)
+        image = Image.open(self.image_path)
+        image_temp = image.resize((IMG_Y, IMG_X))
+        q = QImage(image_temp.tobytes('raw', 'RGB'), image_temp.size[0], image_temp.size[1], QImage.Format_RGB888)
+        pixmap = QPixmap.fromImage(q)
+        self.label_image.setPixmap(pixmap)
+        self.button_add.clicked.connect(lambda: self.image_parse())
+    
+    def image_parse(self):
+        print('!!!')
+        self.close()

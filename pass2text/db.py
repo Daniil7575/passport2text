@@ -6,7 +6,7 @@ class DB:
     def __init__(self) -> None:
         directory = os.getcwd()
         print(directory)
-        self.db = sqlite3.connect('pass2text/db.db')
+        self.db = sqlite3.connect('db.db')
         self.cursor = self.db.cursor()
         self.init_db()
     

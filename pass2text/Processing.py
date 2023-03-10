@@ -38,7 +38,7 @@ def _ocr_core(filename: Union[Image.Image, str]):
             else:
                 a, b, c = 0, 0, 0
             draw.point((i, j), (a, b, c))
-    enh = ImageEnhance.Brightness(image)
+    # enh = ImageEnhance.Brightness(image)
 
 
 # If you don't have tesseract executable in your PATH, include the following:
@@ -56,7 +56,7 @@ def passport_image2dict(image: Union[Image.Image, str], show_images: bool = Fals
     image1 = image.crop((0, h*0.09, w*0.895, h*0.255))
     _ocr_core(image1)
     # нижняя часть
-    image2 = image.crop((w*0.4, h*0.55, w*0.895,h*0.85))
+    image2 = image.crop((w*0.4, h*0.55, w*0.895, h*0.85))
     _ocr_core(image2)
     # серия номер
     image3 = image.crop((w*0.895, h*0.12, w*0.95, h*0.5))
@@ -67,7 +67,7 @@ def passport_image2dict(image: Union[Image.Image, str], show_images: bool = Fals
         image2.show()
         image3.show()
 
-    # --------------------Верхняя часть----------------------------------------------
+    # --------------------Верхняя часть---------------------------------------
     upper_section = pytesseract.image_to_string(image1, lang="rus")
     date_r = r'\d\d\.\d\d\.\d{4}'
     whom_unit_number = re.split(date_r, upper_section)
@@ -76,16 +76,16 @@ def passport_image2dict(image: Union[Image.Image, str], show_images: bool = Fals
     date_of_issue = re.findall(date_r, upper_section)[0]
     code = re.findall(r"[0-9]{3}-[0-9]{3}", whom_unit_number[1])[0]
 
-    # --------------------Верхняя часть----------------------------------------------
+    # --------------------Верхняя часть---------------------------------------
 
-    # --------------------Нижняя часть-----------------------------------------------    
+    # --------------------Нижняя часть---------------------------------------
     down_section = pytesseract.image_to_string(image2, lang='rus')
     fio_sex_born = re.split(date_r, down_section)
     patronymic_r = r'[А-Я]+(?:ОВИЧ|ЕВИЧ|ОВНА|ИЧНА|ЕВНА|ИНИЧНА)'
 
     fio_sex = ' '.join(fio_sex_born[0].replace('\n', ' ').split())
     fi, sex = re.split(patronymic_r, fio_sex)
-    fio_r = r'(?:[А-Я]{3,}\b)'  # Длина слов > 3 
+    fio_r = r'(?:[А-Я]{3,}\b)'  # Длина слов > 3
     fi = re.findall(fio_r, fi)
     try:
         surname = fi[0]
@@ -101,9 +101,9 @@ def passport_image2dict(image: Union[Image.Image, str], show_images: bool = Fals
     born_date = re.findall(date_r, down_section)[0]
 
     born = ' '.join(fio_sex_born[1].replace('\n', ' ').split())
-    # --------------------Нижняя часть----------------------------------------------
+    # --------------------Нижняя часть----------------------------------------
 
-    # --------------------Серия номер-----------------------------------------------
+    # --------------------Серия номер-----------------------------------------
     series_number = pytesseract.image_to_string(image3, lang="rus")
     try:
         series = re.findall(r'\d\d \d\d\b', series_number)[0]
@@ -113,7 +113,7 @@ def passport_image2dict(image: Union[Image.Image, str], show_images: bool = Fals
         number = re.findall(r'\d{6}', series_number)[0]
     except IndexError:
         number = ERROR_TAG
-    # --------------------Серия номер-----------------------------------------------
+    # --------------------Серия номер----------------------------------------
 
     if print_output:
         print(f'Кем выдан: {whom}')
@@ -129,16 +129,15 @@ def passport_image2dict(image: Union[Image.Image, str], show_images: bool = Fals
         print(f'Номер: {number}', end='\n\n')
 
     return {
-        'Кем выдан': whom,
-        'Дата выдачи': date_of_issue,
-        'Код подразделения': code,
-        'Фамилия': surname,
-        'Имя': name,
-        'Отчество': o[0],
-        'Пол': sex,
-        'Дата рождения': born_date,
-        'Место рождения': born,
-        'Серия': series,
-        'Номер': number
+        'issue_place': whom,
+        'issue_date': date_of_issue,
+        'code': code,
+        'surname': surname,
+        'name': name,
+        'patronymic': o[0],
+        'gender': sex,
+        'birth_date': born_date,
+        'birth_place': born,
+        'series': series,
+        'number': number
     }
-

@@ -1,0 +1,1 @@
+update person set issue_date = 'ро ╧3 нстля пняяхх . он лняйнбяйни нак. он цнпндяйнлс нйпсцс ухлйх' where series = '16 13' and code = '305368' 

@@ -536,6 +536,11 @@
         <property name="enabled">
          <bool>true</bool>
         </property>
+        <property name="font">
+         <font>
+          <pointsize>15</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string>Добавить</string>
         </property>
@@ -543,6 +548,11 @@
       </item>
       <item>
        <widget class="QPushButton" name="button_load">
+        <property name="font">
+         <font>
+          <pointsize>15</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string>Добавить по фото</string>
         </property>

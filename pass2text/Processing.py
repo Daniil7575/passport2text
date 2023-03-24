@@ -1,12 +1,11 @@
-from PIL import Image, ImageDraw, ImageEnhance
 import pytesseract
 from typing import Union, Dict
-import os
 import re
 from PIL import Image, ImageDraw
 
 
-# pytesseract.pytesseract.tesseract_cmd = r'C:\Users\spovt\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
+# pytesseract.pytesseract.tesseract_cmd =
+# r'C:\Users\spovt\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
 
 IMAGE_NAME = "temp2.png"
 ERROR_TAG = '[НЕ РАСПОЗНАНО]'
@@ -46,7 +45,9 @@ def _ocr_core(filename: Union[Image.Image, str]):
 # Example tesseract_cmd = r'C:\Program Files (x86)\Tesseract-OCR\tesseract'
 
 
-def passport_image2dict(image: Union[Image.Image, str], show_images: bool = False, print_output: bool = True) -> Dict[str, str]:
+def passport_image2dict(image: Union[Image.Image, str],
+                        show_images: bool = False,
+                        print_output: bool = True) -> Dict[str, str]:
     image = Image.open(image) if isinstance(image, str) else image
     w, h = image.width, image.height
     if w > h:
@@ -141,3 +142,60 @@ def passport_image2dict(image: Union[Image.Image, str], show_images: bool = Fals
         'series': series,
         'number': number
     }
+
+
+def get_first_match(regex_list: list) -> Union[str, None]:
+    if regex_list:
+        return regex_list[0]
+    return ''
+
+
+def second_page_passport(image: Union[Image.Image, str],
+                         show_images: bool = False,
+                         print_output: bool = True) -> Dict[str, str]:
+    image = Image.open(image) if isinstance(image, str) else image
+    w, h = image.width, image.height
+    if w < h:
+        image = image.rotate(270, expand=True)
+    w, h = image.width, image.height
+    image = image.crop((w * 0.51, 0, w, h * 0.5))
+    image1 = image
+    # if show_images:
+    # image1.show()
+    w, h = image.width, image.height
+    image1 = image1.crop((w * 0.19, h * 0.28, w * 0.8, h * 0.56))
+    series_number = pytesseract.image_to_string(image1, lang="rus")
+
+    region_r = r'[А-Я ]* ?ОБЛ\.? ?[А-Я ]*'
+    district_r = r'^[Р\-Н ]*[А-Я]+$'
+    city_r = r'(?:(?:ПОС\. ){1}|(?:ГОР\. ){1})[ А-Я]+'
+    street_r = r'[А-Я ]* ?УЛ\.? ?[А-Я ]*'
+    building_r = r'(?:\d+ ?[А-я:\- \.]*)+'
+
+    second_page = {
+        'region': get_first_match(re.findall(region_r, series_number)),
+        'district': get_first_match(re.findall(district_r, series_number)),
+        'city': get_first_match(re.findall(city_r, series_number)),
+        'street': get_first_match(re.findall(street_r, series_number)),
+        'building': get_first_match(re.findall(building_r, series_number))
+    }
+
+    image2 = image.crop((w * 0.20, h * 0.23, w * 0.8, h * 0.31))
+    date = pytesseract.image_to_string(image2, lang="rus")
+    second_page['date'] = date.strip()
+    image3 = image.crop((w * 0.16, h * 0.53, w * 0.89, h * 0.74))
+    department = pytesseract.image_to_string(image3, lang="rus").strip()
+    second_page['department'] = department
+    print(second_page)
+    image1.show()
+    image2.show()
+    image3.show()
+    return second_page
+    # print(second_page)
+    # if show_images:
+
+
+
+if __name__ == '__main__':
+    second_page_passport(
+        'C:\\Users\\spovt\\Desktop\\kadrovik\\pass2text\\test_photos\\second_page\\2.jpg', True)

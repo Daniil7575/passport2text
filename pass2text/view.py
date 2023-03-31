@@ -1,6 +1,11 @@
 import PyQt5
+
 from GUI.MainWindow import Ui_MainWindow as Ui_MainWindow
+from GUI.SearchWindow import Ui_Dialog as Ui_SearchWindow
 from GUI.FirstPageWindow import Ui_Dialog as Ui_FirstPageWindow
+from GUI.SecondPageWindow import Ui_Dialog as Ui_SecondPageWindow
+from GUI.SnilsPageWindow import Ui_Dialog as Ui_SnilsWindow
+
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QTableWidgetItem, QDialog, QFileDialog
 from db import DB
@@ -133,6 +138,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     rows, idy, QTableWidgetItem(str(inner_el)))
 
 
+class SearchWindow(QDialog, Ui_SearchWindow):
+
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+
+
 class FirstPageWindow(QDialog, Ui_FirstPageWindow):
 
     def __init__(self, main_window):
@@ -141,7 +153,7 @@ class FirstPageWindow(QDialog, Ui_FirstPageWindow):
         self.main_window = main_window
 
         fname = QFileDialog.getOpenFileName(
-            self, 'Загрузить изображение', 'C:\\', "Image files (*.jpg *.png)")
+            self, 'Первая страница паспорта', 'C:\\', "Image files (*.jpg *.png)")
         self.image_path = fname[0]
         print(self.image_path)
 
@@ -172,3 +184,17 @@ class FirstPageWindow(QDialog, Ui_FirstPageWindow):
                 getattr(self, field_name).text())
 
         self.close()
+
+
+class SecondPageWindow(QDialog, Ui_SecondPageWindow):
+
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+
+
+class SnilsWindow(QDialog, Ui_SnilsWindow):
+
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)

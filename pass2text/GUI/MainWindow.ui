@@ -542,7 +542,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Добавить</string>
+         <string>Добавить в БД</string>
         </property>
        </widget>
       </item>

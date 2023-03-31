@@ -464,7 +464,7 @@ class Ui_MainWindow(object):
         self.label_state.setText(_translate("MainWindow", "Отделение"))
         self.label_inn.setText(_translate("MainWindow", "ИНН"))
         self.label_snils.setText(_translate("MainWindow", "СНИЛС"))
-        self.button_add.setText(_translate("MainWindow", "Добавить"))
+        self.button_add.setText(_translate("MainWindow", "Добавить в БД"))
         self.button_load.setText(_translate("MainWindow", "Добавить по фото"))
         self.pushButton.setText(_translate("MainWindow", "Поиск по Серии и Номеру"))
         item = self.table_info.horizontalHeaderItem(0)

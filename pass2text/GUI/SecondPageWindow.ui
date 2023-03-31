@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>941</width>
-    <height>631</height>
+    <width>1246</width>
+    <height>754</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,8 +18,8 @@
     <rect>
      <x>20</x>
      <y>20</y>
-     <width>481</width>
-     <height>591</height>
+     <width>591</width>
+     <height>711</height>
     </rect>
    </property>
    <property name="text">
@@ -29,9 +29,9 @@
   <widget class="QLineEdit" name="state">
    <property name="geometry">
     <rect>
-     <x>740</x>
-     <y>350</y>
-     <width>181</width>
+     <x>950</x>
+     <y>400</y>
+     <width>281</width>
      <height>31</height>
     </rect>
    </property>
@@ -47,9 +47,9 @@
   <widget class="QPushButton" name="button_add">
    <property name="geometry">
     <rect>
-     <x>740</x>
-     <y>400</y>
-     <width>181</width>
+     <x>950</x>
+     <y>450</y>
+     <width>281</width>
      <height>61</height>
     </rect>
    </property>
@@ -65,9 +65,9 @@
   <widget class="QLineEdit" name="ray">
    <property name="geometry">
     <rect>
-     <x>530</x>
-     <y>350</y>
-     <width>181</width>
+     <x>640</x>
+     <y>400</y>
+     <width>281</width>
      <height>31</height>
     </rect>
    </property>
@@ -80,9 +80,9 @@
   <widget class="QLineEdit" name="house">
    <property name="geometry">
     <rect>
-     <x>740</x>
-     <y>270</y>
-     <width>181</width>
+     <x>950</x>
+     <y>320</y>
+     <width>281</width>
      <height>31</height>
     </rect>
    </property>
@@ -95,8 +95,8 @@
   <widget class="QLabel" name="label_street">
    <property name="geometry">
     <rect>
-     <x>740</x>
-     <y>150</y>
+     <x>950</x>
+     <y>200</y>
      <width>161</width>
      <height>41</height>
     </rect>
@@ -114,9 +114,9 @@
   <widget class="QLineEdit" name="region">
    <property name="geometry">
     <rect>
-     <x>530</x>
-     <y>270</y>
-     <width>181</width>
+     <x>640</x>
+     <y>320</y>
+     <width>281</width>
      <height>31</height>
     </rect>
    </property>
@@ -129,8 +129,8 @@
   <widget class="QLabel" name="label_state">
    <property name="geometry">
     <rect>
-     <x>740</x>
-     <y>310</y>
+     <x>950</x>
+     <y>360</y>
      <width>161</width>
      <height>41</height>
     </rect>
@@ -148,8 +148,8 @@
   <widget class="QLabel" name="label_punkt">
    <property name="geometry">
     <rect>
-     <x>530</x>
-     <y>390</y>
+     <x>640</x>
+     <y>440</y>
      <width>121</width>
      <height>41</height>
     </rect>
@@ -167,9 +167,9 @@
   <widget class="QLineEdit" name="punkt">
    <property name="geometry">
     <rect>
-     <x>530</x>
-     <y>430</y>
-     <width>181</width>
+     <x>640</x>
+     <y>480</y>
+     <width>281</width>
      <height>31</height>
     </rect>
    </property>
@@ -182,8 +182,8 @@
   <widget class="QLabel" name="label_reg_date">
    <property name="geometry">
     <rect>
-     <x>530</x>
-     <y>150</y>
+     <x>640</x>
+     <y>200</y>
      <width>181</width>
      <height>41</height>
     </rect>
@@ -201,8 +201,8 @@
   <widget class="QLabel" name="label_region">
    <property name="geometry">
     <rect>
-     <x>530</x>
-     <y>230</y>
+     <x>640</x>
+     <y>280</y>
      <width>161</width>
      <height>41</height>
     </rect>
@@ -220,9 +220,9 @@
   <widget class="QLineEdit" name="street">
    <property name="geometry">
     <rect>
-     <x>740</x>
-     <y>190</y>
-     <width>181</width>
+     <x>950</x>
+     <y>240</y>
+     <width>281</width>
      <height>31</height>
     </rect>
    </property>
@@ -235,9 +235,9 @@
   <widget class="QLineEdit" name="reg_date">
    <property name="geometry">
     <rect>
-     <x>530</x>
-     <y>190</y>
-     <width>181</width>
+     <x>640</x>
+     <y>240</y>
+     <width>281</width>
      <height>31</height>
     </rect>
    </property>
@@ -250,8 +250,8 @@
   <widget class="QLabel" name="label_house">
    <property name="geometry">
     <rect>
-     <x>740</x>
-     <y>230</y>
+     <x>950</x>
+     <y>280</y>
      <width>161</width>
      <height>41</height>
     </rect>
@@ -269,8 +269,8 @@
   <widget class="QLabel" name="label_ray">
    <property name="geometry">
     <rect>
-     <x>530</x>
-     <y>310</y>
+     <x>640</x>
+     <y>360</y>
      <width>151</width>
      <height>41</height>
     </rect>

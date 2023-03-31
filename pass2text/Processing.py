@@ -9,7 +9,9 @@ from PIL import Image, ImageDraw
 
 IMAGE_NAME = "temp2.png"
 ERROR_TAG = '[НЕ РАСПОЗНАНО]'
-pytesseract.pytesseract.tesseract_cmd = r'C:\Users\spovt\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+
+# ПОМЕНЯЙТЕ ПУТЬ НА ТЕССЕРАКТ!
 
 
 def _ocr_core(filename: Union[Image.Image, str]):
@@ -218,6 +220,5 @@ def snils_image2dict(image: Union[Image.Image, str],
 
 
 if __name__ == '__main__':
-    snils_image2dict('C:\\Users\\spovt\\Desktop\\kadrovik\\pass2text\\test_photos\\snils\\_20110331_13253405.jpg', True)
-    # passport_second_page_image2dict(
-    # 'C:\\Users\\spovt\\Desktop\\kadrovik\\pass2text\\test_photos\\second_page\\2.jpg', True)
+    passport_second_page_image2dict(
+        'C:\\Users\\spovt\\Desktop\\kadrovik\\pass2text\\test_photos\\second_page\\2.jpg', True)

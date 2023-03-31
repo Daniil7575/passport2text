@@ -9,7 +9,7 @@ from PIL import Image, ImageDraw, ImageEnhance
 from PyQt5.QtGui import QPixmap, QImage
 import sqlite3
 from PyQt5.QtCore import Qt
-from Processing import passport_image2dict
+from processing import passport_image2dict
 
 
 IMG_X = 410

@@ -45,6 +45,12 @@ def _ocr_core(filename: Union[Image.Image, str]):
 # Example tesseract_cmd = r'C:\Program Files (x86)\Tesseract-OCR\tesseract'
 
 
+def get_first_match(regex_list: list) -> Union[str, None]:
+    if regex_list:
+        return regex_list[0]
+    return ''
+
+
 def passport_image2dict(image: Union[Image.Image, str],
                         show_images: bool = False,
                         print_output: bool = True) -> Dict[str, str]:
@@ -144,13 +150,7 @@ def passport_image2dict(image: Union[Image.Image, str],
     }
 
 
-def get_first_match(regex_list: list) -> Union[str, None]:
-    if regex_list:
-        return regex_list[0]
-    return ''
-
-
-def second_page_passport(image: Union[Image.Image, str],
+def passport_second_page_image2dict(image: Union[Image.Image, str],
                          show_images: bool = False,
                          print_output: bool = True) -> Dict[str, str]:
     image = Image.open(image) if isinstance(image, str) else image
@@ -187,15 +187,37 @@ def second_page_passport(image: Union[Image.Image, str],
     department = pytesseract.image_to_string(image3, lang="rus").strip()
     second_page['department'] = department
     print(second_page)
-    image1.show()
-    image2.show()
-    image3.show()
+    # image1.show()
+    # image2.show()
+    # image3.show()
     return second_page
     # print(second_page)
     # if show_images:
 
 
+def snils_image2dict(image: Union[Image.Image, str],
+                     show_images: bool = False,
+                     print_output: bool = True) -> Dict[str, str]:
+    image = Image.open(image) if isinstance(image, str) else image
+    w, h = image.width, image.height
+    if w < h:
+        image = image.rotate(270, expand=True)
+    image = image.crop((0, h * 0.28, w, h * 0.38))
+
+    if show_images:
+        image.show()
+
+    snils_number_r = r'[0-9\- ]+\b'
+    snils_capture = pytesseract.image_to_string(image, lang="rus")
+
+    snils = {
+        'snils': get_first_match(re.findall(snils_number_r, snils_capture)).strip()
+    }
+    # print(snils)
+    return snils
+
 
 if __name__ == '__main__':
-    second_page_passport(
-        'C:\\Users\\spovt\\Desktop\\kadrovik\\pass2text\\test_photos\\second_page\\2.jpg', True)
+    snils_image2dict('C:\\Users\\spovt\\Desktop\\kadrovik\\pass2text\\test_photos\\snils\\_20110331_13253405.jpg', True)
+    # passport_second_page_image2dict(
+    # 'C:\\Users\\spovt\\Desktop\\kadrovik\\pass2text\\test_photos\\second_page\\2.jpg', True)

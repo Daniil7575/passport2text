@@ -25,7 +25,6 @@ from db import DB
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
-    
     db = DB()
     window = MainWindow(db)
     window.show()

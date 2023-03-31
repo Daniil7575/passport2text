@@ -1,8 +1,7 @@
 import PyQt5
 from GUI.MainWindow import Ui_MainWindow as Ui_MainWindow
-from GUI.ImageWindow import Ui_Dialog as Ui_ImageWindow
-from PyQt5 import QtWidgets  # Основной файл программы с прописанной логикой
-# Импортирование необходимых виджетов из библиотеки PyQt5
+from GUI.FirstPageWindow import Ui_Dialog as Ui_FirstPageWindow
+from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QTableWidgetItem, QDialog, QFileDialog
 from db import DB
 import sys
@@ -10,7 +9,7 @@ from PIL import Image, ImageDraw, ImageEnhance
 from PyQt5.QtGui import QPixmap, QImage
 import sqlite3
 from PyQt5.QtCore import Qt
-from processing import passport_image2dict
+from Processing import passport_image2dict
 
 
 IMG_X = 410
@@ -74,7 +73,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.change_table_view()
 
     def load_image(self):
-        window = ImageWindow(self)
+        window = FirstPageWindow(self)
         window.exec()
 
     def add_to_db(self):
@@ -134,7 +133,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     rows, idy, QTableWidgetItem(str(inner_el)))
 
 
-class ImageWindow(QDialog, Ui_ImageWindow):
+class FirstPageWindow(QDialog, Ui_FirstPageWindow):
 
     def __init__(self, main_window):
         super().__init__()  # Инициализация класса

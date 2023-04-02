@@ -80,7 +80,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.button_load.clicked.connect(lambda: self.load_image())
         self.button_search.clicked.connect(lambda: self.search())
         self.button_delete.clicked.connect(lambda: self.delete())
-        self.button_update.clicked.connect(lambda: self.refresh_table())
+        self.button_update.clicked.connect(lambda: self.change_table_view())
         self.change_table_view()
 
 
@@ -113,8 +113,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Return:
             self.on_enter_click()
-        if event.key() == Qt.Key_Alt:
-            self.change_table_view()
 
     def search(self):
         window = SearchWindow(self)
@@ -210,15 +208,41 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.table_info.setItem(
                     rows, idy, QTableWidgetItem(str(inner_el)))
 
-    def refresh_table(self):
-        print('!!!')
-
     def find_person(self, series, number):
-        print(series, number)
+        try:
+            self.table_info.setRowCount(0)
+            self.table_info.clearContents()
+
+            columns = ["Серия", "Номер", "Фамилия", "Имя", "Отчество", "Пол", "Дата рождения",
+                            "Место рождения", "Кем выдан", "Дата выдачи", "Код подразделения", "Дата регистрации",
+                            "Регион", "Район", "Пункт", "Улица", "Дом", "Отделение", "ИНН", "СНИЛС"]
+            self.table_info.setColumnCount(len(columns))
+            self.table_info.setHorizontalHeaderLabels(columns)
+
+            a = f"SELECT * FROM person WHERE series={series} and number={number}"
+
+            self.cur.execute(a)
+
+            for eli in self.cur.fetchall():
+                        rows = self.table_info.rowCount()
+                        self.table_info.setRowCount(rows + 1)
+                        for idy, inner_el in enumerate(eli):
+                            self.table_info.setItem(
+                                rows, idy, QTableWidgetItem(str(inner_el)))
+                            
+        except Exception as e:
+            print(e)
+
     
     def delete_person(self, series, number):
-        print(series, number)
-        self.refresh_table()
+        try:
+            a = f"DELETE FROM person WHERE series={series} and number={number}"
+            self.cur.execute(a)
+                            
+        except Exception as e:
+            print(e)
+
+        self.change_table_view()
 
 
 class DeleteWindow(QDialog, Ui_DeleteWindow):

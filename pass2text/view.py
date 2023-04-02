@@ -29,17 +29,17 @@ IMG_X_SNILS = 421
 IMG_Y_SNILS = 261
 
 MAIN_WINDOWS_PASS_F_PAGE = {
-     "Код подразделения": "code",
-     "Место рождения": "birth_place",
-     "Отчество": 'patronymic',
      "Серия": 'series',
      "Номер": 'number',
-     "Дата выдачи": 'issue_date',
-     "Дата рождения": 'birth_date',
-     "Имя": 'name',
      "Фамилия": 'surname',
+     "Имя": 'name',
+     "Отчество": 'patronymic',
      "Пол": 'gender',
-     "Кем выдан": 'issue_place'}
+     "Дата рождения": 'birth_date', 
+     "Место рождения": "birth_place",
+     "Дата выдачи": 'issue_date',
+     "Кем выдан": 'issue_place',
+     "Код подразделения": "code",}
 
 
 MAIN_WINDOWS_PASS_S_PAGE = {
@@ -50,6 +50,10 @@ MAIN_WINDOWS_PASS_S_PAGE = {
      "Улица": 'street',
      "Дом": 'house',
      "Отделение": 'state'}
+
+MAIN_WINDOWS_INN = {
+     "ИНН": "inn"
+     }
 
 MAIN_WINDOWS_SNILS = {
      "СНИЛС": "snils"
@@ -92,8 +96,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for el_index, el in enumerate(table):
             for item_index, item in enumerate(el):
                 if str(item) != str(self.table_info.item(el_index, item_index).text()):
-                    win = {**MAIN_WINDOWS_PASS_F_PAGE, **MAIN_WINDOWS_PASS_S_PAGE, **MAIN_WINDOWS_SNILS}
-                    win["ИНН"] = "inn"
+                    win = {**MAIN_WINDOWS_PASS_F_PAGE, **MAIN_WINDOWS_PASS_S_PAGE, **MAIN_WINDOWS_INN, **MAIN_WINDOWS_SNILS}
 
                     s = "update person set {column} = '{val}' where series = '{series_val}' and code = '{code_val}' ".\
                         format(
@@ -103,6 +106,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                 el_index, item_index).text(),
                             series_val=el[0],
                             code_val=el[1])
+                    
+                    print(s)
 
                     try:
                         self.cur.execute(s)
@@ -194,8 +199,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.table_info.clearContents()
 
         columns = ["Серия", "Номер", "Фамилия", "Имя", "Отчество", "Пол", "Дата рождения",
-                   "Место рождения", "Кем выдан", "Дата выдачи", "Код подразделения", "Дата регистрации",
-                   "Регион", "Район", "Пункт", "Улица", "Дом", "Отделение", "ИНН", "СНИЛС"]
+                    "Место рождения", "Дата выдачи", "Кем выдан", "Код подразделения", 
+                    "Регион", "Дата регистрации", "Район", "Пункт", "Улица", "Дом", 
+                    "Отделение", "ИНН", "СНИЛС"]
         self.table_info.setColumnCount(len(columns))
         self.table_info.setHorizontalHeaderLabels(columns)
 
@@ -214,8 +220,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.table_info.clearContents()
 
             columns = ["Серия", "Номер", "Фамилия", "Имя", "Отчество", "Пол", "Дата рождения",
-                            "Место рождения", "Кем выдан", "Дата выдачи", "Код подразделения", "Дата регистрации",
-                            "Регион", "Район", "Пункт", "Улица", "Дом", "Отделение", "ИНН", "СНИЛС"]
+                            "Место рождения", "Дата выдачи", "Кем выдан", "Код подразделения", 
+                            "Регион", "Дата регистрации", "Район", "Пункт", "Улица", "Дом", 
+                            "Отделение", "ИНН", "СНИЛС"]
             self.table_info.setColumnCount(len(columns))
             self.table_info.setHorizontalHeaderLabels(columns)
 

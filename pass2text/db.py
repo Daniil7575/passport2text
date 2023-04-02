@@ -25,6 +25,15 @@ class DB:
                         "issue_date" TEXT,
                         "issue_place" TEXT,
                         "code" TEXT,
+                        "region" TEXT,
+                        "reg_date" TEXT,
+                        "ray" TEXT,
+                        "punkt" TEXT,
+                        "street" TEXT,
+                        "house" TEXT,
+                        "state" TEXT,
+                        "inn" TEXT,
+                        "snils" TEXT,
                         PRIMARY KEY("series","number")
                     );
                 """)

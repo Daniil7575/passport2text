@@ -69,7 +69,6 @@ def error_message(error_text):
     error.setStandardButtons(QMessageBox.Ok)
     error.exec_()
 
-
 class MainWindow(QMainWindow, Ui_MainWindow):
 
     def __init__(self, db: DB):
@@ -92,29 +91,28 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for el_index, el in enumerate(table):
             for item_index, item in enumerate(el):
                 if str(item) != str(self.table_info.item(el_index, item_index).text()):
+                    win = {**MAIN_WINDOWS_PASS_F_PAGE, **MAIN_WINDOWS_PASS_S_PAGE, **MAIN_WINDOWS_SNILS}
+                    win["ИНН"] = "inn"
 
                     s = "update person set {column} = '{val}' where series = '{series_val}' and code = '{code_val}' ".\
                         format(
-                            column=MAIN_WINDOWS_PASS_F_PAGE[self.table_info.horizontalHeaderItem(
+                            column=win[self.table_info.horizontalHeaderItem(
                                 item_index).text()],
                             val=self.table_info.item(
                                 el_index, item_index).text(),
                             series_val=el[0],
                             code_val=el[1])
 
-                    with open("command.txt", "w") as f:
-                        f.write(s)
-
                     try:
                         self.cur.execute(s)
-                        self.conn.commit()
-                    except:
-                        pass
+                        self.db.commit()
+                    except Exception as e:
+                        print(e)
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Return:
             self.on_enter_click()
-        if event.key() == Qt.Key_Shift:
+        if event.key() == Qt.Key_Alt:
             self.change_table_view()
 
     def search(self):
@@ -145,7 +143,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 check_line(self.name.text()),
                 check_line(self.surname.text()),
                 check_line(self.gender.text()),
-                check_line(self.issue_place.text()) + "'"]
+                check_line(self.issue_place.text()),
+                check_line(self.region.text()),
+                check_line(self.reg_date.text()),
+                check_line(self.ray.text()),
+                check_line(self.punkt.text()),
+                check_line(self.street.text()),
+                check_line(self.house.text()),
+                check_line(self.state.text()),
+                check_line(self.inn.text()),
+                check_line(self.snils.text())   + "'"]
             )
             a = f"""
                 INSERT INTO person(
@@ -159,7 +166,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         name, 
                         surname, 
                         gender, 
-                        issue_place
+                        issue_place,
+                        region,
+                        reg_date,
+                        ray,
+                        punkt,
+                        street,
+                        house,
+                        state,
+                        inn,
+                        snils
                     ) VALUES({values});
                 """
             print(a)
@@ -170,7 +186,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 pass
             self.db.commit()
             self.change_table_view()
-        except:
+        except Exception as e:
+            print(e)
             error_message('Одно или несколько полей не заполнены!')
 
     def change_table_view(self):
@@ -178,7 +195,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.table_info.clearContents()
 
         columns = ["Серия", "Номер", "Фамилия", "Имя", "Отчество", "Пол", "Дата рождения",
-                   "Место рождения", "Кем выдан", "Дата выдачи", "Код подразделения"]
+                   "Место рождения", "Кем выдан", "Дата выдачи", "Код подразделения", "Дата регистрации",
+                   "Регион", "Район", "Пункт", "Улица", "Дом", "Отделение", "ИНН", "СНИЛС"]
         self.table_info.setColumnCount(len(columns))
         self.table_info.setHorizontalHeaderLabels(columns)
 
@@ -222,7 +240,7 @@ class SearchWindow(QDialog, Ui_SearchWindow):
         try:
             series = check_line(self.series.text())
             number = check_line(self.number.text())
-            print(series, number)
+
             self.close()
         except:
             error_message('Одно или несколько полей не заполнены!')

@@ -7,7 +7,7 @@ from PIL import Image, ImageDraw
 
 
 ERROR_TAG = '[НЕ РАСПОЗНАНО]'
-pytesseract.pytesseract.tesseract_cmd = r'C:\Users\spovt\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR'
 
 
 def ocr_core(filename: Union[Image.Image, str]):

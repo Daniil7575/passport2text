@@ -10,12 +10,15 @@ from GUI.SnilsPageWindow import Ui_Dialog as Ui_SnilsWindow
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QTableWidgetItem, QDialog, QFileDialog
 from db import DB
-import sys
+import sys, os
 from PIL import Image, ImageDraw, ImageEnhance
 from PyQt5.QtGui import QPixmap, QImage
 import sqlite3
 from PyQt5.QtCore import Qt
-from Processing import passport_image2dict
+from Processing import passport_image2dict, passport_second_page_image2dict
+
+
+DOC_PATH = os.path.expanduser("~/Documents")
 
 
 IMG_X_PAGE = 591
@@ -216,7 +219,7 @@ class FirstPageWindow(QDialog, Ui_FirstPageWindow):
         self.main_window = main_window
 
         fname = QFileDialog.getOpenFileName(
-            self, 'Первая страница паспорта', 'C:\\', "Image files (*.jpg *.png)")
+            self, 'Первая страница паспорта', DOC_PATH, "Image files (*.jpg *.png)")
         self.image_path = fname[0]
 
         image = Image.open(self.image_path)
@@ -225,7 +228,6 @@ class FirstPageWindow(QDialog, Ui_FirstPageWindow):
             image = image.rotate(270, expand=True)
 
         data = passport_image2dict(image)
-        self.patronymic.setText('asdasdasd')
 
         [getattr(self, field_name).setText(value)
          for field_name, value in data.items()]
@@ -249,8 +251,8 @@ class FirstPageWindow(QDialog, Ui_FirstPageWindow):
                 window = SecondPageWindow(self.main_window)
                 self.close()
                 window.exec()
-            except:
-                pass
+            except Exception as e:
+                print(e)
         except:
             error_message('Одно или несколько полей не заполнены!')
 
@@ -263,13 +265,18 @@ class SecondPageWindow(QDialog, Ui_SecondPageWindow):
         self.main_window = main_window
 
         fname = QFileDialog.getOpenFileName(
-            self, 'Вторая страница паспорта', 'C:\\', "Image files (*.jpg *.png)")
+            self, 'Вторая страница паспорта', DOC_PATH, "Image files (*.jpg *.png)")
         self.image_path = fname[0]
 
         image = Image.open(self.image_path)
         w, h = image.width, image.height
         if w > h:
             image = image.rotate(270, expand=True)
+        
+        data = passport_second_page_image2dict(image)
+        
+        [getattr(self, field_name).setText(value)
+         for field_name, value in data.items()]
         
         image_temp = image.resize((IMG_X_PAGE, IMG_Y_PAGE)).convert('RGBA')
         q = QImage(image_temp.tobytes('raw', 'RGBA'),
@@ -298,7 +305,7 @@ class SnilsWindow(QDialog, Ui_SnilsWindow):
         self.main_window = main_window
 
         fname = QFileDialog.getOpenFileName(
-            self, 'СНИЛС', 'C:\\', "Image files (*.jpg *.png)")
+            self, 'СНИЛС', DOC_PATH, "Image files (*.jpg *.png)")
         self.image_path = fname[0]
 
         image = Image.open(self.image_path)

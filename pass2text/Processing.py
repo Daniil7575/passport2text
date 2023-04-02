@@ -3,15 +3,10 @@ from typing import Union, Dict
 import re
 from PIL import Image, ImageDraw
 
-
-# pytesseract.pytesseract.tesseract_cmd =
-# r'C:\Users\spovt\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
-
-IMAGE_NAME = "temp2.png"
 ERROR_TAG = '[НЕ РАСПОЗНАНО]'
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-# ПОМЕНЯЙТЕ ПУТЬ НА ТЕССЕРАКТ!
+# ПОМЕНЯЙТЕ ПУТЬ НА ВАЛИДНЫЙ ДО ТЕССЕРАКТА!
 
 
 def _ocr_core(filename: Union[Image.Image, str]):
@@ -40,11 +35,6 @@ def _ocr_core(filename: Union[Image.Image, str]):
                 a, b, c = 0, 0, 0
             draw.point((i, j), (a, b, c))
     # enh = ImageEnhance.Brightness(image)
-
-
-# If you don't have tesseract executable in your PATH, include the following:
-
-# Example tesseract_cmd = r'C:\Program Files (x86)\Tesseract-OCR\tesseract'
 
 
 def get_first_match(regex_list: list) -> Union[str, None]:
@@ -158,12 +148,12 @@ def passport_second_page_image2dict(image: Union[Image.Image, str],
     image = Image.open(image) if isinstance(image, str) else image
     w, h = image.width, image.height
     if w < h:
-        image = image.rotate(270, expand=True)
+        image = image.rotate(90, expand=True)
     w, h = image.width, image.height
     image = image.crop((w * 0.51, 0, w, h * 0.5))
     image1 = image
-    # if show_images:
-    # image1.show()
+    if show_images:
+        image1.show()
     w, h = image.width, image.height
     image1 = image1.crop((w * 0.19, h * 0.28, w * 0.8, h * 0.56))
     series_number = pytesseract.image_to_string(image1, lang="rus")
@@ -176,25 +166,23 @@ def passport_second_page_image2dict(image: Union[Image.Image, str],
 
     second_page = {
         'region': get_first_match(re.findall(region_r, series_number)),
-        'district': get_first_match(re.findall(district_r, series_number)),
-        'city': get_first_match(re.findall(city_r, series_number)),
+        'ray': get_first_match(re.findall(district_r, series_number)),
+        'punkt': get_first_match(re.findall(city_r, series_number)),
         'street': get_first_match(re.findall(street_r, series_number)),
-        'building': get_first_match(re.findall(building_r, series_number))
+        'house': get_first_match(re.findall(building_r, series_number))
     }
 
-    image2 = image.crop((w * 0.20, h * 0.23, w * 0.8, h * 0.31))
+    image2 = image.crop((w * 0.15, h * 0.23, w * 0.8, h * 0.31))
     date = pytesseract.image_to_string(image2, lang="rus")
-    second_page['date'] = date.strip()
-    image3 = image.crop((w * 0.16, h * 0.53, w * 0.89, h * 0.74))
+    second_page['reg_date'] = date.strip()
+    image3 = image.crop((w * 0.18, h * 0.57, w * 0.91, h * 0.7))
     department = pytesseract.image_to_string(image3, lang="rus").strip()
-    second_page['department'] = department
+    second_page['state'] = department
     print(second_page)
     # image1.show()
     # image2.show()
     # image3.show()
     return second_page
-    # print(second_page)
-    # if show_images:
 
 
 def snils_image2dict(image: Union[Image.Image, str],

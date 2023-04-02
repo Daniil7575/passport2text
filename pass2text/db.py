@@ -24,7 +24,7 @@ class DB:
                         "birth_place" TEXT,
                         "issue_date" TEXT,
                         "issue_place" TEXT,
-                        "code" TEXT,
+                        "code1" TEXT,
                         "region" TEXT,
                         "reg_date" TEXT,
                         "ray" TEXT,

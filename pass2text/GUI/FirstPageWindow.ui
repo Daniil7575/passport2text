@@ -304,7 +304,7 @@
     <string>Серия</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="code">
+  <widget class="QLineEdit" name="code1">
    <property name="geometry">
     <rect>
      <x>640</x>

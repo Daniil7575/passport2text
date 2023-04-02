@@ -39,7 +39,7 @@ MAIN_WINDOWS_PASS_F_PAGE = {
      "Место рождения": "birth_place",
      "Дата выдачи": 'issue_date',
      "Кем выдан": 'issue_place',
-     "Код подразделения": "code"}
+     "Код подразделения": "code1"}
 
 
 MAIN_WINDOWS_PASS_S_PAGE = {
@@ -102,12 +102,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     print(col)
 
                     if col != "series" and col != "number":
-                        s = "update person set {column} = '{val}' where series = '{series_val}' and code = '{code_val}' ".\
+                        s = "update person set {column} = '{val}' where series = '{series_val}' and number = '{number_val}' ".\
                             format(
                                 column=col,
                                 val=self.table_info.item(el_index, item_index).text(),
                                 series_val=el[0],
-                                code_val=el[1])
+                                number_val=el[1])
 
                         try:
                             self.cur.execute(s)
@@ -138,7 +138,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def add_to_db(self):
         try:
             values = "', '".join(
-                ["'" + check_line(self.code.text()),
+                ["'" + check_line(self.code1.text()),
                 check_line(self.birth_place.text()),
                 check_line(self.patronymic.text()),
                 check_line(self.series.text()),
@@ -161,7 +161,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             )
             a = f"""
                 INSERT INTO person(
-                        code, 
+                        code1, 
                         birth_place, 
                         patronymic, 
                         series, 

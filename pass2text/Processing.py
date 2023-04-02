@@ -130,7 +130,7 @@ def passport_image2dict(image: Union[Image.Image, str],
     return {
         'issue_place': whom,
         'issue_date': date_of_issue,
-        'code': code,
+        'code1': code,
         'surname': surname,
         'name': name,
         'patronymic': o[0],

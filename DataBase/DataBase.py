@@ -23,7 +23,7 @@ class DataBaseCluster:
                   "birth_place" TEXT,
                   "issue_date" TEXT,
                   "issue_place" TEXT,
-                  "code" TEXT,
+                  "code1" TEXT,
                   PRIMARY KEY("series","number")
                 );
             """

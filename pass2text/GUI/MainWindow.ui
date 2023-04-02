@@ -582,6 +582,18 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QPushButton" name="button_update">
+        <property name="font">
+         <font>
+          <pointsize>15</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Обновить</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
     <item>

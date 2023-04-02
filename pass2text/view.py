@@ -80,6 +80,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.button_load.clicked.connect(lambda: self.load_image())
         self.button_search.clicked.connect(lambda: self.search())
         self.button_delete.clicked.connect(lambda: self.delete())
+        self.button_update.clicked.connect(lambda: self.refresh_table())
         self.change_table_view()
 
 
@@ -209,6 +210,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.table_info.setItem(
                     rows, idy, QTableWidgetItem(str(inner_el)))
 
+    def refresh_table(self):
+        print('!!!')
+
+    def find_person(self, series, number):
+        print(series, number)
+    
+    def delete_person(self, series, number):
+        print(series, number)
+        self.refresh_table()
+
 
 class DeleteWindow(QDialog, Ui_DeleteWindow):
 
@@ -216,13 +227,13 @@ class DeleteWindow(QDialog, Ui_DeleteWindow):
         super().__init__()
         self.setupUi(self)
 
-        self.button_delete.clicked.connect(lambda: self.delete_person())
+        self.button_delete.clicked.connect(lambda: self.delete_person(main_window))
 
-    def delete_person(self):
+    def delete_person(self, main_window):
         try:
             series = check_line(self.series.text())
             number = check_line(self.number.text())
-            print(series, number)
+            main_window.delete_person(series, number)
             self.close()
         except:
             error_message('Одно или несколько полей не заполнены!')
@@ -234,16 +245,17 @@ class SearchWindow(QDialog, Ui_SearchWindow):
         super().__init__()
         self.setupUi(self)
 
-        self.button_search.clicked.connect(lambda: self.search_person())
+        self.button_search.clicked.connect(lambda: self.search_person(main_window))
 
-    def search_person(self):
+    def search_person(self, main_window):
         try:
             series = check_line(self.series.text())
             number = check_line(self.number.text())
-
+            main_window.find_person(series, number)
             self.close()
-        except:
+        except Exception as ex:
             error_message('Одно или несколько полей не заполнены!')
+            print(ex)
         
 
 class FirstPageWindow(QDialog, Ui_FirstPageWindow):
@@ -379,4 +391,3 @@ class SnilsWindow(QDialog, Ui_SnilsWindow):
                 print(e)
         except:
             error_message('Одно или несколько полей не заполнены!')
-        

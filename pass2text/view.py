@@ -230,7 +230,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.table_info.setColumnCount(len(columns))
             self.table_info.setHorizontalHeaderLabels(columns)
 
-            a = f"SELECT * FROM person WHERE series={series} and number={number}"
+            a = f"SELECT * FROM person WHERE series='{series}' and number='{number}'"
 
             self.cur.execute(a)
 
@@ -247,7 +247,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     
     def delete_person(self, series, number):
         try:
-            a = f"DELETE FROM person WHERE series={int(series)} and number={int(number)}"
+            a = f"DELETE FROM person WHERE series='{series}' and number='{number}'"
             self.cur.execute(a)
             self.db.commit()
             print(a)

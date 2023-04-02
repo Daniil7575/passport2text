@@ -14,8 +14,8 @@ class DB:
         try:
             self.cursor.execute("""
                     CREATE TABLE "person" (
-                        "series" INTEGER,
-                        "number" INTEGER,
+                        "series" TEXT,
+                        "number" TEXT,
                         "surname" TEXT,
                         "name" TEXT,
                         "patronymic" TEXT,

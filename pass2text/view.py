@@ -39,11 +39,11 @@ MAIN_WINDOWS_PASS_F_PAGE = {
      "Место рождения": "birth_place",
      "Дата выдачи": 'issue_date',
      "Кем выдан": 'issue_place',
-     "Код подразделения": "code",}
+     "Код подразделения": "code"}
 
 
 MAIN_WINDOWS_PASS_S_PAGE = {
-     "Регион": "region",
+    "Регион": "region",
      "Дата регистрации": "reg_date",
      "Район": 'ray',
      "Пункт": 'punkt',
@@ -59,6 +59,7 @@ MAIN_WINDOWS_SNILS = {
      "СНИЛС": "snils"
      }
 
+win = {**MAIN_WINDOWS_PASS_F_PAGE, **MAIN_WINDOWS_PASS_S_PAGE, **MAIN_WINDOWS_INN, **MAIN_WINDOWS_SNILS}
 
 def check_line(line):
         line = line.strip()
@@ -96,9 +97,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for el_index, el in enumerate(table):
             for item_index, item in enumerate(el):
                 if str(item) != str(self.table_info.item(el_index, item_index).text()):
-                    win = {**MAIN_WINDOWS_PASS_F_PAGE, **MAIN_WINDOWS_PASS_S_PAGE, **MAIN_WINDOWS_INN, **MAIN_WINDOWS_SNILS}
 
                     col = win[self.table_info.horizontalHeaderItem(item_index).text()]
+                    print(col)
+
                     if col != "series" and col != "number":
                         s = "update person set {column} = '{val}' where series = '{series_val}' and code = '{code_val}' ".\
                             format(
@@ -198,10 +200,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.table_info.setRowCount(0)
             self.table_info.clearContents()
 
-            columns = ["Серия", "Номер", "Фамилия", "Имя", "Отчество", "Пол", "Дата рождения",
-                            "Место рождения", "Дата выдачи", "Кем выдан", "Код подразделения", 
-                            "Регион", "Дата регистрации", "Район", "Пункт", "Улица", "Дом", 
-                            "Отделение", "ИНН", "СНИЛС"]
+            columns = win.keys()
             self.table_info.setColumnCount(len(columns))
             self.table_info.setHorizontalHeaderLabels(columns)
 

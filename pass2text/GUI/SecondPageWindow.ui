@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1246</width>
+    <width>1663</width>
     <height>754</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
     <rect>
      <x>20</x>
      <y>20</y>
-     <width>591</width>
+     <width>1001</width>
      <height>711</height>
     </rect>
    </property>
@@ -29,8 +29,8 @@
   <widget class="QLineEdit" name="state">
    <property name="geometry">
     <rect>
-     <x>950</x>
-     <y>400</y>
+     <x>1360</x>
+     <y>420</y>
      <width>281</width>
      <height>31</height>
     </rect>
@@ -47,8 +47,8 @@
   <widget class="QPushButton" name="button_add">
    <property name="geometry">
     <rect>
-     <x>950</x>
-     <y>450</y>
+     <x>1360</x>
+     <y>470</y>
      <width>281</width>
      <height>61</height>
     </rect>
@@ -65,8 +65,8 @@
   <widget class="QLineEdit" name="ray">
    <property name="geometry">
     <rect>
-     <x>640</x>
-     <y>400</y>
+     <x>1050</x>
+     <y>420</y>
      <width>281</width>
      <height>31</height>
     </rect>
@@ -80,8 +80,8 @@
   <widget class="QLineEdit" name="house">
    <property name="geometry">
     <rect>
-     <x>950</x>
-     <y>320</y>
+     <x>1360</x>
+     <y>340</y>
      <width>281</width>
      <height>31</height>
     </rect>
@@ -95,8 +95,8 @@
   <widget class="QLabel" name="label_street">
    <property name="geometry">
     <rect>
-     <x>950</x>
-     <y>200</y>
+     <x>1360</x>
+     <y>220</y>
      <width>161</width>
      <height>41</height>
     </rect>
@@ -114,8 +114,8 @@
   <widget class="QLineEdit" name="region">
    <property name="geometry">
     <rect>
-     <x>640</x>
-     <y>320</y>
+     <x>1050</x>
+     <y>340</y>
      <width>281</width>
      <height>31</height>
     </rect>
@@ -129,8 +129,8 @@
   <widget class="QLabel" name="label_state">
    <property name="geometry">
     <rect>
-     <x>950</x>
-     <y>360</y>
+     <x>1360</x>
+     <y>380</y>
      <width>161</width>
      <height>41</height>
     </rect>
@@ -148,8 +148,8 @@
   <widget class="QLabel" name="label_punkt">
    <property name="geometry">
     <rect>
-     <x>640</x>
-     <y>440</y>
+     <x>1050</x>
+     <y>460</y>
      <width>121</width>
      <height>41</height>
     </rect>
@@ -167,8 +167,8 @@
   <widget class="QLineEdit" name="punkt">
    <property name="geometry">
     <rect>
-     <x>640</x>
-     <y>480</y>
+     <x>1050</x>
+     <y>500</y>
      <width>281</width>
      <height>31</height>
     </rect>
@@ -182,8 +182,8 @@
   <widget class="QLabel" name="label_reg_date">
    <property name="geometry">
     <rect>
-     <x>640</x>
-     <y>200</y>
+     <x>1050</x>
+     <y>220</y>
      <width>181</width>
      <height>41</height>
     </rect>
@@ -201,8 +201,8 @@
   <widget class="QLabel" name="label_region">
    <property name="geometry">
     <rect>
-     <x>640</x>
-     <y>280</y>
+     <x>1050</x>
+     <y>300</y>
      <width>161</width>
      <height>41</height>
     </rect>
@@ -220,8 +220,8 @@
   <widget class="QLineEdit" name="street">
    <property name="geometry">
     <rect>
-     <x>950</x>
-     <y>240</y>
+     <x>1360</x>
+     <y>260</y>
      <width>281</width>
      <height>31</height>
     </rect>
@@ -235,8 +235,8 @@
   <widget class="QLineEdit" name="reg_date">
    <property name="geometry">
     <rect>
-     <x>640</x>
-     <y>240</y>
+     <x>1050</x>
+     <y>260</y>
      <width>281</width>
      <height>31</height>
     </rect>
@@ -250,8 +250,8 @@
   <widget class="QLabel" name="label_house">
    <property name="geometry">
     <rect>
-     <x>950</x>
-     <y>280</y>
+     <x>1360</x>
+     <y>300</y>
      <width>161</width>
      <height>41</height>
     </rect>
@@ -269,8 +269,8 @@
   <widget class="QLabel" name="label_ray">
    <property name="geometry">
     <rect>
-     <x>640</x>
-     <y>360</y>
+     <x>1050</x>
+     <y>380</y>
      <width>151</width>
      <height>41</height>
     </rect>

@@ -21,8 +21,10 @@ from Processing import passport_image2dict, passport_second_page_image2dict
 DOC_PATH = os.path.expanduser("~/Documents")
 
 
-IMG_X_PAGE = 591
-IMG_Y_PAGE = 711
+IMG_X_PAGE_1 = 591
+IMG_Y_PAGE_1 = 711
+IMG_X_PAGE_2 = 1001
+IMG_Y_PAGE_2 = 711
 IMG_X_SNILS = 421
 IMG_Y_SNILS = 261
 
@@ -232,7 +234,7 @@ class FirstPageWindow(QDialog, Ui_FirstPageWindow):
         [getattr(self, field_name).setText(value)
          for field_name, value in data.items()]
 
-        image_temp = image.resize((IMG_X_PAGE, IMG_Y_PAGE)).convert('RGBA')
+        image_temp = image.resize((IMG_X_PAGE_1, IMG_Y_PAGE_1)).convert('RGBA')
         q = QImage(image_temp.tobytes('raw', 'RGBA'),
                    image_temp.size[0],
                    image_temp.size[1],
@@ -278,7 +280,7 @@ class SecondPageWindow(QDialog, Ui_SecondPageWindow):
         [getattr(self, field_name).setText(value)
          for field_name, value in data.items()]
         
-        image_temp = image.resize((IMG_X_PAGE, IMG_Y_PAGE)).convert('RGBA')
+        image_temp = image.resize((IMG_X_PAGE_2, IMG_Y_PAGE_2)).convert('RGBA')
         q = QImage(image_temp.tobytes('raw', 'RGBA'),
                    image_temp.size[0],
                    image_temp.size[1],

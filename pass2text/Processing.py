@@ -3,7 +3,7 @@ from typing import Union, Dict
 import re
 from PIL import Image, ImageDraw
 
-ERROR_TAG = '[НЕ РАСПОЗНАНО]'
+ERROR_TAG = '-'
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 # ПОМЕНЯЙТЕ ПУТЬ НА ВАЛИДНЫЙ ДО ТЕССЕРАКТА!
@@ -40,7 +40,7 @@ def _ocr_core(filename: Union[Image.Image, str]):
 def get_first_match(regex_list: list) -> Union[str, None]:
     if regex_list:
         return regex_list[0]
-    return ''
+    return ERROR_TAG
 
 
 def passport_image2dict(image: Union[Image.Image, str],
@@ -156,6 +156,7 @@ def passport_second_page_image2dict(image: Union[Image.Image, str],
         image1.show()
     w, h = image.width, image.height
     image1 = image1.crop((w * 0.19, h * 0.28, w * 0.8, h * 0.56))
+    # image1.show()
     series_number = pytesseract.image_to_string(image1, lang="rus")
 
     region_r = r'[А-Я ]* ?ОБЛ\.? ?[А-Я ]*'
@@ -197,13 +198,13 @@ def snils_image2dict(image: Union[Image.Image, str],
     if show_images:
         image.show()
 
-    snils_number_r = r'[0-9\- ]+\b'
+    snils_number_r = r'\d+[-]\d+[-]\d+[ ]\d+'
     snils_capture = pytesseract.image_to_string(image, lang="rus")
 
     snils = {
         'snils': get_first_match(re.findall(snils_number_r, snils_capture)).strip()
     }
-    # print(snils)
+    print(snils)
     return snils
 
 

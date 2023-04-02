@@ -15,7 +15,7 @@ from PIL import Image, ImageDraw, ImageEnhance
 from PyQt5.QtGui import QPixmap, QImage
 import sqlite3
 from PyQt5.QtCore import Qt
-from Processing import passport_image2dict, passport_second_page_image2dict
+from Processing import passport_image2dict, passport_second_page_image2dict, snils_image2dict
 
 
 DOC_PATH = os.path.expanduser("~/Documents")
@@ -28,7 +28,8 @@ IMG_Y_PAGE_2 = 711
 IMG_X_SNILS = 421
 IMG_Y_SNILS = 261
 
-D = {"Код подразделения": "code",
+MAIN_WINDOWS_PASS_F_PAGE = {
+     "Код подразделения": "code",
      "Место рождения": "birth_place",
      "Отчество": 'patronymic',
      "Серия": 'series',
@@ -39,6 +40,20 @@ D = {"Код подразделения": "code",
      "Фамилия": 'surname',
      "Пол": 'gender',
      "Кем выдан": 'issue_place'}
+
+
+MAIN_WINDOWS_PASS_S_PAGE = {
+     "Регион": "region",
+     "Дата регистрации": "reg_date",
+     "Район": 'ray',
+     "Пункт": 'punkt',
+     "Улица": 'street',
+     "Дом": 'house',
+     "Отделение": 'state'}
+
+MAIN_WINDOWS_SNILS = {
+     "СНИЛС": "snils"
+     }
 
 
 def check_line(line):
@@ -80,7 +95,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
                     s = "update person set {column} = '{val}' where series = '{series_val}' and code = '{code_val}' ".\
                         format(
-                            column=D[self.table_info.horizontalHeaderItem(
+                            column=MAIN_WINDOWS_PASS_F_PAGE[self.table_info.horizontalHeaderItem(
                                 item_index).text()],
                             val=self.table_info.item(
                                 el_index, item_index).text(),
@@ -246,7 +261,7 @@ class FirstPageWindow(QDialog, Ui_FirstPageWindow):
 
     def image_parse(self):
         try:
-            for field_name in D.values():
+            for field_name in MAIN_WINDOWS_PASS_F_PAGE.values():
                 getattr(self.main_window, field_name).setText(
                     check_line(getattr(self, field_name).text()))
             try:
@@ -272,8 +287,8 @@ class SecondPageWindow(QDialog, Ui_SecondPageWindow):
 
         image = Image.open(self.image_path)
         w, h = image.width, image.height
-        if w > h:
-            image = image.rotate(270, expand=True)
+        if h > w:
+            image = image.rotate(90, expand=True)
         
         data = passport_second_page_image2dict(image)
         
@@ -293,11 +308,18 @@ class SecondPageWindow(QDialog, Ui_SecondPageWindow):
     
     def image_parse(self):
         try:
-            window = SnilsWindow(self.main_window)
-            self.close()
-            window.exec()
+            for field_name in MAIN_WINDOWS_PASS_S_PAGE.values():
+                getattr(self.main_window, field_name).setText(
+                    check_line(getattr(self, field_name).text()))
+            try:
+                window = SnilsWindow(self.main_window)
+                self.close()
+                window.exec()
+            except Exception as e:
+                print(e)
         except:
-            pass
+            error_message('Одно или несколько полей не заполнены!')
+
 
 class SnilsWindow(QDialog, Ui_SnilsWindow):
 
@@ -312,6 +334,11 @@ class SnilsWindow(QDialog, Ui_SnilsWindow):
 
         image = Image.open(self.image_path)
         
+        data = snils_image2dict(image)
+        
+        [getattr(self, field_name).setText(value)
+         for field_name, value in data.items()]
+        
         image_temp = image.resize((IMG_X_SNILS, IMG_Y_SNILS)).convert('RGBA')
         q = QImage(image_temp.tobytes('raw', 'RGBA'),
                    image_temp.size[0],
@@ -324,4 +351,14 @@ class SnilsWindow(QDialog, Ui_SnilsWindow):
         self.button_add.clicked.connect(lambda: self.image_parse())
 
     def image_parse(self):
-        self.close()
+        try:
+            for field_name in MAIN_WINDOWS_SNILS.values():
+                getattr(self.main_window, field_name).setText(
+                    check_line(getattr(self, field_name).text()))
+            try:
+                self.close()
+            except Exception as e:
+                print(e)
+        except:
+            error_message('Одно или несколько полей не заполнены!')
+        

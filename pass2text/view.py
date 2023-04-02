@@ -247,8 +247,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     
     def delete_person(self, series, number):
         try:
-            a = f"DELETE FROM person WHERE series={series} and number={number}"
+            a = f"DELETE FROM person WHERE series={int(series)} and number={int(number)}"
             self.cur.execute(a)
+            self.db.commit()
+            print(a)
                             
         except Exception as e:
             print(e)

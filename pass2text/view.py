@@ -98,22 +98,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 if str(item) != str(self.table_info.item(el_index, item_index).text()):
                     win = {**MAIN_WINDOWS_PASS_F_PAGE, **MAIN_WINDOWS_PASS_S_PAGE, **MAIN_WINDOWS_INN, **MAIN_WINDOWS_SNILS}
 
-                    s = "update person set {column} = '{val}' where series = '{series_val}' and code = '{code_val}' ".\
-                        format(
-                            column=win[self.table_info.horizontalHeaderItem(
-                                item_index).text()],
-                            val=self.table_info.item(
-                                el_index, item_index).text(),
-                            series_val=el[0],
-                            code_val=el[1])
-                    
-                    print(s)
+                    col = win[self.table_info.horizontalHeaderItem(item_index).text()]
+                    if col != "series" and col != "number":
+                        s = "update person set {column} = '{val}' where series = '{series_val}' and code = '{code_val}' ".\
+                            format(
+                                column=col,
+                                val=self.table_info.item(el_index, item_index).text(),
+                                series_val=el[0],
+                                code_val=el[1])
 
-                    try:
-                        self.cur.execute(s)
-                        self.db.commit()
-                    except Exception as e:
-                        print(e)
+                        try:
+                            self.cur.execute(s)
+                            self.db.commit()
+                            print(s)
+                        except Exception as e:
+                            print(e)
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Return:
@@ -195,24 +194,30 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             error_message('Одно или несколько полей не заполнены!')
 
     def change_table_view(self):
-        self.table_info.setRowCount(0)
-        self.table_info.clearContents()
+        try:
+            self.table_info.setRowCount(0)
+            self.table_info.clearContents()
 
-        columns = ["Серия", "Номер", "Фамилия", "Имя", "Отчество", "Пол", "Дата рождения",
-                    "Место рождения", "Дата выдачи", "Кем выдан", "Код подразделения", 
-                    "Регион", "Дата регистрации", "Район", "Пункт", "Улица", "Дом", 
-                    "Отделение", "ИНН", "СНИЛС"]
-        self.table_info.setColumnCount(len(columns))
-        self.table_info.setHorizontalHeaderLabels(columns)
+            columns = ["Серия", "Номер", "Фамилия", "Имя", "Отчество", "Пол", "Дата рождения",
+                            "Место рождения", "Дата выдачи", "Кем выдан", "Код подразделения", 
+                            "Регион", "Дата регистрации", "Район", "Пункт", "Улица", "Дом", 
+                            "Отделение", "ИНН", "СНИЛС"]
+            self.table_info.setColumnCount(len(columns))
+            self.table_info.setHorizontalHeaderLabels(columns)
 
-        self.cur.execute(f'select * from person')
+            a = f"SELECT * FROM person"
 
-        for eli in self.cur.fetchall():
-            rows = self.table_info.rowCount()
-            self.table_info.setRowCount(rows + 1)
-            for idy, inner_el in enumerate(eli):
-                self.table_info.setItem(
-                    rows, idy, QTableWidgetItem(str(inner_el)))
+            self.cur.execute(a)
+
+            for eli in self.cur.fetchall():
+                        rows = self.table_info.rowCount()
+                        self.table_info.setRowCount(rows + 1)
+                        for idy, inner_el in enumerate(eli):
+                            self.table_info.setItem(
+                                rows, idy, QTableWidgetItem(str(inner_el)))
+                            
+        except Exception as e:
+            print(e)
 
     def find_person(self, series, number):
         try:

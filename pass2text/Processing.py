@@ -42,6 +42,10 @@ def get_first_match(regex_list: list) -> Union[str, None]:
         return regex_list[0]
     return ERROR_TAG
 
+def get_at_index(lst: list, idx: int) -> str:
+    if len(lst) > idx:
+        return lst[idx]
+    return ERROR_TAG
 
 def passport_image2dict(image: Union[Image.Image, str],
                         show_images: bool = False,
@@ -70,10 +74,11 @@ def passport_image2dict(image: Union[Image.Image, str],
     upper_section = pytesseract.image_to_string(image1, lang="rus")
     date_r = r'\d\d\.\d\d\.\d{4}'
     whom_unit_number = re.split(date_r, upper_section)
-    whom = ' '.join(whom_unit_number[0].replace('\n', ' ').split())
-    whom = re.findall(r'[А-Я.]+ (?:[А-Я. -]+|[№\d ]+)+', whom)[0]
-    date_of_issue = re.findall(date_r, upper_section)[0]
-    code = re.findall(r"[0-9]{3}-[0-9]{3}", whom_unit_number[1])[0]
+    whom = ' '.join(get_at_index(whom_unit_number, 0).replace('\n', ' ').split())
+    whom = get_first_match(re.findall(r'[А-Я.]+ (?:[А-Я. -]+|[№\d ]+)+', whom))
+    date_of_issue = get_first_match(re.findall(date_r, upper_section))
+    # whom_unit_number[1]
+    code = get_first_match(re.findall(r"[0-9]{3}-[0-9]{3}", get_at_index(whom_unit_number, 1)))
 
     # --------------------Верхняя часть---------------------------------------
 
@@ -82,8 +87,11 @@ def passport_image2dict(image: Union[Image.Image, str],
     fio_sex_born = re.split(date_r, down_section)
     patronymic_r = r'[А-Я]+(?:ОВИЧ|ЕВИЧ|ОВНА|ИЧНА|ЕВНА|ИНИЧНА)'
 
-    fio_sex = ' '.join(fio_sex_born[0].replace('\n', ' ').split())
-    fi, sex = re.split(patronymic_r, fio_sex)
+    fio_sex = ' '.join((fio_sex_born[0]).replace('\n', ' ').split())
+    try:
+        fi, sex = re.split(patronymic_r, fio_sex)
+    except:
+        fi, sex = ERROR_TAG, ERROR_TAG
     fio_r = r'(?:[А-Я]{3,}\b)'  # Длина слов > 3
     fi = re.findall(fio_r, fi)
     try:
@@ -91,27 +99,26 @@ def passport_image2dict(image: Union[Image.Image, str],
         name = fi[1]
 
     except IndexError:
+        surname = ERROR_TAG
         name = ERROR_TAG
 
     o = re.findall(patronymic_r, fio_sex)
 
     sex = 'МУЖ.' if re.findall(r'(?:М|[МУ]+|УЖ|Ж\.)', sex) else 'ЖЕН.'
 
-    born_date = re.findall(date_r, down_section)[0]
+    born_date = get_first_match(re.findall(date_r, down_section))
 
-    born = ' '.join(fio_sex_born[1].replace('\n', ' ').split())
+    born = ' '.join(get_at_index(fio_sex_born, 1).replace('\n', ' ').split())
     # --------------------Нижняя часть----------------------------------------
 
     # --------------------Серия номер-----------------------------------------
     series_number = pytesseract.image_to_string(image3, lang="rus")
-    try:
-        series = re.findall(r'\d\d \d\d\b', series_number)[0]
-    except IndexError:
-        series = ERROR_TAG
-    try:
-        number = re.findall(r'\d{6}', series_number)[0]
-    except IndexError:
-        number = ERROR_TAG
+
+    series = get_first_match(re.findall(r'\d\d \d\d\b', series_number))
+
+
+    number = get_first_match(re.findall(r'\d{6}', series_number))
+
     # --------------------Серия номер----------------------------------------
 
     if print_output:
@@ -120,7 +127,7 @@ def passport_image2dict(image: Union[Image.Image, str],
         print(f'Код подразделения: {code}')
         print(f'Фамилия: {surname}')
         print(f'Имя: {name}')
-        print(f'Отчество: {o[0]}')
+        print(f'Отчество: {get_first_match(o)}')
         print(f'Пол: {sex}')
         print(f'Дата рождения: {born_date}')
         print(f'Место рождения: {born}')
@@ -133,7 +140,7 @@ def passport_image2dict(image: Union[Image.Image, str],
         'code1': code,
         'surname': surname,
         'name': name,
-        'patronymic': o[0],
+        'patronymic': get_first_match(o),
         'gender': sex,
         'birth_date': born_date,
         'birth_place': born,
@@ -175,10 +182,10 @@ def passport_second_page_image2dict(image: Union[Image.Image, str],
 
     image2 = image.crop((w * 0.15, h * 0.23, w * 0.8, h * 0.31))
     date = pytesseract.image_to_string(image2, lang="rus")
-    second_page['reg_date'] = date.strip()
+    second_page['reg_date'] = date.strip() if date.strip() else ERROR_TAG
     image3 = image.crop((w * 0.18, h * 0.57, w * 0.91, h * 0.7))
     department = pytesseract.image_to_string(image3, lang="rus").strip()
-    second_page['state'] = department
+    second_page['state'] = department if department.strip() else ERROR_TAG
     print(second_page)
     # image1.show()
     # image2.show()

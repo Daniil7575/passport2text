@@ -4,7 +4,7 @@ import re
 from PIL import Image, ImageDraw
 
 ERROR_TAG = '-'
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = r'C:\Users\spovt\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
 
 # ПОМЕНЯЙТЕ ПУТЬ НА ВАЛИДНЫЙ ДО ТЕССЕРАКТА!
 
@@ -149,9 +149,10 @@ def passport_image2dict(image: Union[Image.Image, str],
     }
 
 
-def passport_second_page_image2dict(image: Union[Image.Image, str],
-                         show_images: bool = False,
-                         print_output: bool = True) -> Dict[str, str]:
+def passport_second_page_image2dict(
+        image: Union[Image.Image, str],
+        show_images: bool = False,
+        print_output: bool = True) -> Dict[str, str]:
     image = Image.open(image) if isinstance(image, str) else image
     w, h = image.width, image.height
     if w < h:
@@ -159,8 +160,7 @@ def passport_second_page_image2dict(image: Union[Image.Image, str],
     w, h = image.width, image.height
     image = image.crop((w * 0.51, 0, w, h * 0.5))
     image1 = image
-    if show_images:
-        image1.show()
+    
     w, h = image.width, image.height
     image1 = image1.crop((w * 0.19, h * 0.28, w * 0.8, h * 0.56))
     # image1.show()
@@ -186,6 +186,10 @@ def passport_second_page_image2dict(image: Union[Image.Image, str],
     image3 = image.crop((w * 0.18, h * 0.57, w * 0.91, h * 0.7))
     department = pytesseract.image_to_string(image3, lang="rus").strip()
     second_page['state'] = department if department.strip() else ERROR_TAG
+    if show_images:
+        image1.show()
+        image2.show()
+        image3.show()
     print(second_page)
     # image1.show()
     # image2.show()
@@ -198,23 +202,32 @@ def snils_image2dict(image: Union[Image.Image, str],
                      print_output: bool = True) -> Dict[str, str]:
     image = Image.open(image) if isinstance(image, str) else image
     w, h = image.width, image.height
+
     if w < h:
         image = image.rotate(270, expand=True)
-    image = image.crop((0, h * 0.28, w, h * 0.38))
 
-    if show_images:
-        image.show()
+    print(image.width, image.height)
+    image = image.crop((0, h * 0.28, w, h * 0.399))
 
-    snils_number_r = r'\d+[-]\d+[-]\d+[ ]\d+'
-    snils_capture = pytesseract.image_to_string(image, lang="rus")
+    # if show_images:
+    #     image.show()
 
-    snils = {
-        'snils': get_first_match(re.findall(snils_number_r, snils_capture)).strip()
-    }
-    print(snils)
-    return snils
+    # snils_number_r = r'\d+[-]\d+[-]\d+[ ]\d+'
+    # snils_capture = pytesseract.image_to_string(image, lang="rus")
+
+    # snils = {
+    #     'snils': get_first_match(re.findall(snils_number_r, snils_capture)).strip()
+    # }
+    # print(snils)
+    # return snils
 
 
 if __name__ == '__main__':
-    passport_second_page_image2dict(
-        'C:\\Users\\spovt\\Desktop\\kadrovik\\pass2text\\test_photos\\second_page\\2.jpg', True)
+    # for i in range(1, 9):
+    #     snils_image2dict(f'C:\\Users\\spovt\\Desktop\\kadrovik\\pass2text\\pass2text\\test\\snils\\{i}.jpg', True)
+    for i in range(1, 14):
+        passport_second_page_image2dict(f'C:\\Users\\spovt\\Desktop\\kadrovik\\pass2text\\pass2text\\test\\2pg\\{i}.jpg', True)
+
+    # snils_image2dict(f'C:\\Users\\spovt\\Desktop\\kadrovik\\pass2text\\pass2text\\test\\snils\\5.jpg', True)
+    # passport_second_page_image2dict(
+    #     'C:\\Users\\spovt\\Desktop\\kadrovik\\pass2text\\test_photos\\second_page\\5.jpg', True)

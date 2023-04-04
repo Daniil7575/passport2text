@@ -134,3 +134,4 @@ __pycache__/
 *.jpeg
 *.png
 *.db
+test_photos/
